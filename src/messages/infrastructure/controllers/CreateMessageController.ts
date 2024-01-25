@@ -1,12 +1,24 @@
 import { Request, Response } from "express";
-
 import { CreateMessageUseCase } from "../../application/CreateMessageUseCase";
+import { getAllUserUseCase } from "../../../user/infrastructure/dependencies";
 
 export class CreateMessageController {
-  constructor(readonly createMessageUseCase: CreateMessageUseCase) {}
-
+  constructor(readonly createMessageUseCase: CreateMessageUseCase) { }
   async run(req: Request, res: Response) {
     const data = req.body;
+    // Verificar que el mensaje solo pueda ser enviado por un usuario existente
+    const users = await getAllUserUseCase.run()
+    if (users) {
+      const usernameExists = users.find((user) => user.username === data.username);
+      if (!usernameExists) {
+        return res.status(400).send({
+          status: "error",
+          data: "Usuario no existente",
+        });
+      }
+    }
+
+
     try {
       const message = await this.createMessageUseCase.run(
         data.username,
@@ -20,7 +32,7 @@ export class CreateMessageController {
             id: message?.id,
             username: message?.username,
             content: message?.content,
-            date: message?.date,
+            date: message?.date
           },
         });
       else

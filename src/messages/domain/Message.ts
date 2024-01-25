@@ -3,7 +3,7 @@ export class Message {
       readonly id: number,
       readonly username: string,
       readonly content: string,
-      readonly date: string
+      readonly date: string,
     ) {}
   }
   

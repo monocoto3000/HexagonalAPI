@@ -3,8 +3,7 @@ import { Message } from "../domain/Message";
 import { MessageRepository } from "../domain/MessageRepository";
 
 export class CreateMessageUseCase {
-    constructor(readonly messageRepository: MessageRepository) {}
-  
+    constructor(readonly messageRepository: MessageRepository) {}  
     async run(
       username: string,
       content: string,
