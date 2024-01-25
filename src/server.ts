@@ -2,16 +2,16 @@ import express from "express";
 import { Signale } from "signale";
 
 import { loadRouter } from "./event/LoadRouter";
-import { productRouter } from "./product/infrastructure/ProductRouter";
 import { messageRouter } from "./messages/infrastructure/MessageRouter";
+import { UserRouter } from "./user/infrastructure/UserRouter";
 
 const app = express();
 
 const signale = new Signale();
 
 app.use(express.json());
-app.use("/products", productRouter);
 app.use("/messages", messageRouter);
+app.use("/users", UserRouter);
 app.use("/load", loadRouter);
 
 app.listen(3000, () => {
