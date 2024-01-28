@@ -15,7 +15,7 @@ export class GetAllMessageController {
             return {
               id: messages.id,
               name: messages.username,
-              description: messages.content,
+              content: messages.content,
               date: messages.date,
             };
           }),

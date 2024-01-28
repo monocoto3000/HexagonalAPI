@@ -1,6 +1,6 @@
 import { query } from "../../database/mysql";
 import { User } from "../domain/User";
-import { UserRepository } from "../domain/UserRepository";
+import { CreateUserParams, UserRepository } from "../domain/UserRepository";
 
 export class MysqlUserRepository implements UserRepository {
   async getAll(): Promise<User[] | null> {
@@ -28,23 +28,34 @@ export class MysqlUserRepository implements UserRepository {
     }
   }
 
-
-  async createUser(
-    name: string,
-    last_name: string,
-    second_last_name: string,
-    username: string,
-    email: string,
-    password: string,
-    birthday: string,
-    age: number
-  ): Promise<User | null> {
+  async createUser(userParams: CreateUserParams): Promise<User | null> {
     const sql =
       "INSERT INTO user (name, last_name, second_last_name, username, email, password, birthday, age) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    const params: any[] = [name, last_name, second_last_name, username, email, password, birthday, age];
+    const params: any[] = [
+      userParams.name,
+      userParams.last_name,
+      userParams.second_last_name,
+      userParams.username,
+      userParams.email,
+      userParams.password,
+      userParams.birthday,
+      userParams.age
+    ];
+  
     try {
       const [result]: any = await query(sql, params);
-      return new User(result.insertId, name, last_name, second_last_name, username, email, password, birthday, age, Date.toString());
+      return new User(
+        result.insertId,
+        userParams.name,
+        userParams.last_name,
+        userParams.second_last_name,
+        userParams.username,
+        userParams.email,
+        userParams.password,
+        userParams.birthday,
+        userParams.age,
+        Date.toString()
+      );
     } catch (error) {
       return null;
     }

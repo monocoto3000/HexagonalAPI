@@ -4,7 +4,6 @@ import { Signale } from "signale";
 
 dotenv.config();
 const signale = new Signale();
-
  export const config = {
   host: process.env.DB_HOST,
   user: process.env.DB_USER,

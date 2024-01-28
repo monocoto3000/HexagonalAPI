@@ -6,7 +6,7 @@ export class CreateUserController {
   constructor(
     readonly createuserUseCase: CreateUserUseCase,
     readonly getAlluserUseCase: GetAllUserUseCase
-    ) { }
+  ) { }
 
   //Generar edad automaticamente por fecha de nacimiento
   calculateAge(birthday: Date): number {
@@ -23,7 +23,7 @@ export class CreateUserController {
 
     //Datos del body 
     const data = req.body;
-    
+
     // Verificar longitud de contraseña
     if (data.password.length < 8) {
       return res.status(400).send({
@@ -46,20 +46,20 @@ export class CreateUserController {
         });
       }
     }
-    
+
     const age = this.calculateAge(data.birthday);
     // Formato de POST AAAA-MM-DD
     try {
-      const user = await this.createuserUseCase.run(
-        data.name,
-        data.last_name,
-        data.second_last_name,
-        data.username,
-        data.email,
-        data.password,
-        data.birthday,
-        age,
-      );
+      const user = await this.createuserUseCase.run({
+        name: data.name,
+        last_name: data.last_name,
+        second_last_name: data.second_last_name,
+        username: data.username,
+        email: data.email,
+        password: data.password,
+        birthday: data.birthday,
+        age: age,
+      });
       if (user)
         res.status(201).send({
           status: "success",

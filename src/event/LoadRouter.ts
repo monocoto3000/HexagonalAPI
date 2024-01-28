@@ -3,24 +3,30 @@ import express from "express";
 
 const config = {
   protocol: "amqp",
-  hostname: "localhost",
+  hostname: process.env.DB_HOST,
   port: 3000,
-  username: "root",
-  password: "890mmc12@Motita800_",
+  username: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
 };
-
-
 
 export const loadRouter = express.Router();
 
+
 loadRouter.get("/", async function loadEvent(req, res) {
-  const conn = await amqp.connect(config);
-  console.log("Conexión exitosa");
-  const channel = await conn.createChannel();
-  console.log("Canal creado exitosamente");
-  await channel.sendToQueue("InitialEvent", Buffer.from("Mensaje"));
-  console.log("Mensaje enviado");
-  await channel.close();
-  await conn.close();
-  res.status(200).send("OK");
+  try {
+    const conn = await amqp.connect(config);
+    console.log("Conexión exitosa");
+    const channel = await conn.createChannel();
+    console.log("Canal creado exitosamente");
+    channel.sendToQueue("InitialEvent", Buffer.from("Mensaje"));
+    console.log("Mensaje enviado");
+    await channel.close();
+    await conn.close();
+    res.status(200).send("OK");
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).send("Error");
+  }
+
 });
+

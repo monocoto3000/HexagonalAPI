@@ -7,7 +7,6 @@ export class GetAllMessageUseCase {
   async run(): Promise<Message[] | null> {
     try {
       const result = await this.messageRepository.getAll();
-      console.log(result);
       return result;
     } catch (error) {
       return null;

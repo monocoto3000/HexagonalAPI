@@ -6,6 +6,7 @@ import { messageRouter } from "./messages/infrastructure/MessageRouter";
 import { UserRouter } from "./user/infrastructure/UserRouter";
 
 const app = express();
+app.disable("x-powered-by");
 
 const signale = new Signale();
 
