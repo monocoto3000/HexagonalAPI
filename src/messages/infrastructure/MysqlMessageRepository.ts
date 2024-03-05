@@ -32,12 +32,26 @@ export class MysqlMessageRepository implements MessageRepository {
     const params: any[] = [username, content];
     try {
       const [result]: any = await query(sql, params);
-      //El objeto Result es un objeto que contiene info generada de la bd
-      /*No es necesaria la validación de la cantidad de filas afectadas, ya que, al
-            estar dentro de un bloque try/catch si hay error se captura en el catch */
       return new Message(result.insertId, username, content, Date.toString());
     } catch (error) {
       return null;
     }
   }
+
+  async deleteMessageById(id: number): Promise<any | null> {
+    const sql = "DELETE FROM messages WHERE id=?";
+    const params: any[] = [id];
+    try {
+      const [result]: any = await query(sql, params);
+      if (result && result.affectedRows > 0) {
+        return result;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
 }

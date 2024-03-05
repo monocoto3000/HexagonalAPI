@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { CreateUserUseCase } from "../../application/CreateUserUseCase";
 import { GetAllUserUseCase } from "../../application/GetAllUserUseCase";
+import { BcryptPasswordEncryptor } from "../Adapters/BcryptAdapter";
 
 export class CreateUserController {
   constructor(
@@ -50,13 +51,14 @@ export class CreateUserController {
     const age = this.calculateAge(data.birthday);
     // Formato de POST AAAA-MM-DD
     try {
+      const hashedPassword = await BcryptPasswordEncryptor.hashPassword(data.password); // Hashear la contraseña
       const user = await this.createuserUseCase.run({
         name: data.name,
         last_name: data.last_name,
         second_last_name: data.second_last_name,
         username: data.username,
         email: data.email,
-        password: data.password,
+        password: hashedPassword,
         birthday: data.birthday,
         age: age,
       });

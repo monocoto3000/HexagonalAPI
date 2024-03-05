@@ -6,4 +6,5 @@ export interface MessageRepository {
     username: string,
     content: string,
   ): Promise<Message | null>;
+  deleteMessageById(id: number):Promise<Message | null>
 }

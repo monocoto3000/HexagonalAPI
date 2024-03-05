@@ -1,11 +1,11 @@
 import express from "express";
 import { Signale } from "signale";
-
 import { loadRouter } from "./event/LoadRouter";
 import { messageRouter } from "./messages/infrastructure/MessageRouter";
 import { UserRouter } from "./user/infrastructure/UserRouter";
 
 const app = express();
+
 app.disable("x-powered-by");
 
 const signale = new Signale();

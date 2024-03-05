@@ -3,11 +3,14 @@ import { CreateMessageUseCase } from "../../application/CreateMessageUseCase";
 import { getAllUserUseCase } from "../../../user/infrastructure/dependencies";
 
 export class CreateMessageController {
-  constructor(readonly createMessageUseCase: CreateMessageUseCase) { }
+  constructor(
+    private readonly createMessageUseCase: CreateMessageUseCase
+  ) {}
+
   async run(req: Request, res: Response) {
     const data = req.body;
-    // Verificar que el mensaje solo pueda ser enviado por un usuario existente
-    const users = await getAllUserUseCase.run()
+
+    const users = await getAllUserUseCase.run();
     if (users) {
       const usernameExists = users.find((user) => user.username === data.username);
       if (!usernameExists) {
@@ -18,14 +21,12 @@ export class CreateMessageController {
       }
     }
 
-
     try {
       const message = await this.createMessageUseCase.run(
         data.username,
         data.content,
       );
-
-      if (message)
+      if (message) {
         res.status(201).send({
           status: "success",
           data: {
@@ -35,16 +36,17 @@ export class CreateMessageController {
             date: message?.date
           },
         });
-      else
+      } else {
         res.status(204).send({
           status: "error",
           data: "No fue posible crear el mensaje",
         });
-    } catch (error) {
-      res.status(204).send({
+      }
+    } catch (error: any) {
+      res.status(500).send({
         status: "error",
-        data: "Ocurrio un error D:",
-        msn: error,
+        data: "Ocurrió un error al crear el mensaje",
+        msn: error.message,
       });
     }
   }

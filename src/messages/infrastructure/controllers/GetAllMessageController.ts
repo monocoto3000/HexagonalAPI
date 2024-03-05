@@ -14,7 +14,7 @@ export class GetAllMessageController {
           data: messages.map((messages: any) => {
             return {
               id: messages.id,
-              name: messages.username,
+              username: messages.username,
               content: messages.content,
               date: messages.date,
             };

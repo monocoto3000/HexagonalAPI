@@ -1,26 +1,28 @@
 import express from "express";
+import { createMessageController, getAllMessageController, deleteMessageByIdController } from "./dependencies";
+import rateLimit from "express-rate-limit";
 
-import { createMessageController, getAllMessageController } from "./dependencies";
+const accountLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // Intervalo
+  max: 6, // Cantidad max de peticiones
+  message: "Demasiadas peticiones realizadas, intenta despues de 1 hora"
+});
+
 
 export const messageRouter = express.Router();
 
-messageRouter.get("/", async function(req, res) {
-  try {
-    const result = await getAllMessageController.run(req, res);
-    return res.status(200).send(result);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).send("Error");
-  }
-});
+messageRouter.get(
+  "/", 
+  getAllMessageController.run.bind(getAllMessageController),
+);
 
-messageRouter.post("/", async function(req, res) {
-  try {
-    const result = await createMessageController.run(req, res);
-    return res.status(200).send(result);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).send("Error");
-  }
-});
+messageRouter.post(
+  "/",accountLimiter,
+  createMessageController.run.bind(createMessageController),
+);
+
+messageRouter.delete(
+  "/:id", accountLimiter,
+  deleteMessageByIdController.run.bind(deleteMessageByIdController),
+);
 
